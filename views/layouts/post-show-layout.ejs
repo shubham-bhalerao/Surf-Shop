@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!-- MapBox Links -->
+   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+   <!-- Star Rating-->
+   <link rel="stylesheet" href="/css/star-rating.css">
+   <!-- Font Awesome -->
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+   <!-- JQuery -->
+   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+   <!-- Custom Css -->
+   <link rel="stylesheet" href="/css/post-show.css">
+   <title><%=title%></title>
+</head>
+
+<body>
+   <% include ../partials/navbar%>
+   <% include ../partials/flash-messages%>
+   <%- body -%>
+   <script>
+      mapboxgl.accessToken = "<%=mapboxToken%>";
+      var post = <%-JSON.stringify(post) %>;
+   </script>
+   <script src="/js/post-show.js"></script>
+</body>
+
+</html>

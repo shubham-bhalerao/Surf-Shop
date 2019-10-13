@@ -1,0 +1,112 @@
+<% layout('layouts/post-show-layout') -%>
+<h1>Show Page</h1>
+<div>
+   <h2>
+      <%=post.title%>
+   </h2>
+   <p>
+      <%=post.price%>
+   </p>
+   <p>
+      <%=post.description%>
+   </p>
+   <p>
+      <%=post.location%>
+   </p>
+   <p>
+      Submitted By <strong><%=post.author.username%></strong>
+   </p>
+   <p>
+      <% for(let i=0;i<5;i++){ %>
+      <% if(i<floorRating){ %>
+      <i class="fas fa-star"></i>
+      <% } else if((post.avgRating-i>0) && (post.avgRating-i<1)){ %>
+      <i class="fas fa-star-half-alt"></i>
+      <% } else { %>
+      <i class="far fa-star"></i>
+      <% } %>
+      <% } %>
+      <%=`${post.avgRating} star${post.avgRating === 1 ? "" :"s"}`%>
+   </p>
+   <% post.images.forEach(function(image){ %>
+   <img src="<%=image.url%>" alt="surf shop image" width="200px">
+   <%})%>
+   <br>
+   <div id='map'></div>
+   <%if(currentUser && post.author.equals(currentUser._id)){ %>
+   <a href="/posts/<%=post._id%>/edit">Edit</a>
+   <form action="/posts/<%=post._id%>?_method=DELETE" method="POST">
+      <button>Delete Post</button>
+   </form>
+   <%} %>
+   <% if(currentUser){%>
+   <h2>Create A Review</h2>
+   <form action="/posts/<%=post._id%>/reviews" method="POST">
+      <div>
+         <label>Body</label>
+         <textarea name="review[body]" required></textarea>
+      </div>
+      <fieldset class="starability-basic">
+         <legend>First rating:</legend>
+         <button class="clear-rating" type="button">Clear Rating</button>
+         <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
+            aria-label="No rating." />
+         <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+         <label for="first-rate1" title="Terrible">1 star</label>
+         <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+         <label for="first-rate2" title="Not good">2 stars</label>
+         <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+         <label for="first-rate3" title="Average">3 stars</label>
+         <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+         <label for="first-rate4" title="Very good">4 stars</label>
+         <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+         <label for="first-rate5" title="Amazing">5 stars</label>
+      </fieldset>
+      <div>
+         <input type="submit">
+      </div>
+   </form>
+   <% } else { %>
+   <h2><a href="/login?returnTo=true">Login to add a review</a></h2>
+   <% } %>
+   <hr>
+   <h3>Reviews</h3>
+   <% post.reviews.forEach(function(review){ %>
+   <p><strong><%=review.author.username%></strong></p>
+   <p><%=review.body%> ----- <%=review.rating%></p>
+   <%if(currentUser && review.author.equals(currentUser._id)){%>
+   <span>
+      <button class="edit-button">Edit</button>
+      <form action="/posts/<%=post._id%>/reviews/<%=review._id%>?_method=PUT" method="POST" class="edit-toggle-form">
+         <div>
+            <label>Body</label>
+            <textarea name="review[body]"><%=review.body%></textarea>
+            <fieldset class="starability-basic">
+               <legend>First rating:</legend>
+               <button class="clear-rating" type="button">Clear Rating</button>
+               <input type="radio" id="edit-rate0" class="input-no-rate" name="review[rating]" value="0" checked
+                  aria-label="No rating." />
+               <input type="radio" id="edit-rate1" name="review[rating]" value="1" />
+               <label for="edit-rate1" title="Terrible">1 star</label>
+               <input type="radio" id="edit-rate2" name="review[rating]" value="2" />
+               <label for="edit-rate2" title="Not good">2 stars</label>
+               <input type="radio" id="edit-rate3" name="review[rating]" value="3" />
+               <label for="edit-rate3" title="Average">3 stars</label>
+               <input type="radio" id="edit-rate4" name="review[rating]" value="4" />
+               <label for="edit-rate4" title="Very good">4 stars</label>
+               <input type="radio" id="edit-rate5" name="review[rating]" value="5" />
+               <label for="edit-rate5" title="Amazing">5 stars</label>
+            </fieldset>
+            <button>Update Review</button>
+         </div>
+      </form>
+   </span>
+   <script>
+      $("#edit-rate<%=review.rating%>").prop("checked", true);
+   </script>
+   <form action="/posts/<%=post._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST" class="delete-form">
+      <button>Delete Review</button>
+   </form>
+   <%}%>
+   <% }); %>
+</div>

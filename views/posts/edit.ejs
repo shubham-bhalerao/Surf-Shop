@@ -1,0 +1,45 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Edit new post</h1>
+
+<form action="/posts/<%=post._id%>?_method=PUT" id="editForm" method="POST" enctype="multipart/form-data">
+   <div>
+      <input type="text" value="<%=post.title%>" name="post[title]">
+   </div>
+   <div>
+      <input type="number" value="<%=post.price%>" step="0.01" name="post[price]">
+   </div>
+   <div>
+      <input type="file" accept="images/*" name="images" multiple id="imageUploads">
+   </div>
+   <p>Existing Images</p>
+   <%post.images.forEach(function(image, i){ %>
+   <img src="<%=image.url%>" width="100px">
+   <label for="image<%=i%>">Delete ?</label>
+   <input type="checkbox" name="deleteImages[]" id="image<%=i%>" class="deleteImageCheckbox"
+      value="<%=image.public_id%>">
+   <% });%>
+   <div>
+      <input type="text" value="<%=post.location%>" name="post[location]">
+   </div>
+   <div>
+      <textarea name="post[description]"><%=post.description%></textarea>
+   </div>
+   <button>Submit</button>
+
+</form>
+
+<script>
+   let editForm = document.getElementById("editForm");
+   editForm.addEventListener("submit", function (event) {
+      let toDeleteImages = document.querySelectorAll(".deleteImageCheckbox:checked")
+         .length;
+      let initialImages = document.querySelectorAll(".deleteImageCheckbox")
+         .length;
+      let newImagess = document.querySelector("#imageUploads").files
+         .length;
+      if (newImagess + initialImages - toDeleteImages > 4) {
+         alert(`You need to delete atleast ${4-newImagess+initialImages-toDeleteImages} more images`);
+         event.preventDefault();
+      }
+   });
+</script>
